@@ -1,0 +1,75 @@
+---
+title: "TestingPlotly"
+author: "Ronald Rodriguez"
+date: "29 de septiembre de 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+library("plotly")
+library("tidyr")
+library("dplyr")
+data("EuStockMarkets")
+
+stocks <- as.data.frame(EuStockMarkets)%>%
+gather(index, price) %>%
+mutate(time = rep(time(EuStockMarkets),4))
+
+plot_ly(data = stocks, x= stocks$time, y = stocks$price, color = stocks$index,type="scatter",mode = "markers")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r scatter3d, echo=FALSE}
+plot_ly(x = mtcars$wt, y = mtcars$mpg,z=mtcars$hp, mode = "markers",type="scatter3d",color=as.factor(mtcars$cyl),size=mtcars$disp)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r linear, echo=FALSE}
+data("airmiles")
+plot_ly(x = time(airmiles), y = airmiles,mode = "linear")
+```
+```{r box, echo=FALSE}
+data("iris")
+plot_ly(y=iris$Sepal.Length, color=iris$Species, type = "box")
+```
+
+```{r heatmap, echo=FALSE}
+terrain1 <- matrix(rnorm(100*100), nrow = 100, ncol= 100)
+plot_ly(z = terrain1, type = "heatmap")
+```
+
+```{r 3dsurface, echo=FALSE}
+terrain2 <- matrix(sort(rnorm(100*100)), nrow = 100, ncol= 100)
+plot_ly(z = terrain2, type = "surface")
+```
+
+```{r map, echo=FALSE}
+state_pop <- data.frame(State = state.abb,Pop = as.vector(state.x77[,1]))
+state_pop$hover <- with(state_pop, paste(State,'<br>',"Population:",Pop))
+borders <- list(color = toRGB("red"))
+
+map_options <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+plot_ly(state_pop, z = Pop, text = hover, locations = State, type ='chroropleth',
+        locationmode = 'USA-states', color = Pop, colors = 'Blues', marker = list(line = borders))%>%
+  layout(tittle = 'Us population in 1975 ', geo = map_options)
+```
