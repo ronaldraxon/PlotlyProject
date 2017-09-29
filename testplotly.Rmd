@@ -57,8 +57,28 @@ terrain2 <- matrix(sort(rnorm(100*100)), nrow = 100, ncol= 100)
 plot_ly(z = terrain2, type = "surface")
 ```
 
+```{r 3dsurface, echo=FALSE}
+p <- economics %>%
+  tidyr::gather(variable, value, -date) %>%
+  transform(id = as.integer(factor(variable))) %>%
+  plot_ly(x = ~date, y = ~value, color = ~variable, colors = "Dark2",
+          yaxis = ~paste0("y", id)) %>%
+  add_lines() %>%
+  subplot(nrows = 5, shareX = TRUE)
+p
+```
+
+
+```{r anscombe, echo=FALSE}
+anscombeData1 <- data_frame(x=c(10.0,8.0,13.0,9.0,11.0,14.0,6.0,4.0,12.0,7.0,5.0),y=c(8.04,6.95,7.58,8.81,8.33,9.96,7.24,4.26,10.84,4.82,5.68))
+
+
+```
+
+
+
 ```{r map, echo=FALSE}
-state_pop <- data.frame(State = state.abb,Pop = as.vector(state.x77[,1]))
+state_pop <- data.frame(State = state.abb, Pop = as.vector(state.x77[,1]))
 state_pop$hover <- with(state_pop, paste(State,'<br>',"Population:",Pop))
 borders <- list(color = toRGB("red"))
 
@@ -69,7 +89,7 @@ map_options <- list(
   lakecolor = toRGB('white')
 )
 
-plot_ly(state_pop, z = Pop, text = hover, locations = State, type ='chroropleth',
-        locationmode = 'USA-states', color = Pop, colors = 'Blues', marker = list(line = borders))%>%
-  layout(tittle = 'Us population in 1975 ', geo = map_options)
+plot_ly(state_pop, z = state_pop$Pop, text =  state_pop$hover, locations =  state_pop$State, type ='choropleth',
+        locationmode = 'USA-states', color = state_pop$Pop, colors = 'Blues', marker = list(line = borders))%>%
+  layout(title = 'Us population in 1975', geo = map_options)
 ```
