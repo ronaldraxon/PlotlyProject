@@ -1,0 +1,66 @@
+---
+title: "Anscombe's quartet"
+author: "Ronald Rodriguez"
+date: "01 de octubre de 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Anscombe's quartet comprises four datasets that have nearly identical simple descriptive 
+statistics, yet appear very different when graphed. Each dataset consists of eleven (x,y) points. 
+They were constructed in 1973 by the statistician Francis Anscombe to demonstrate 
+both the importance of graphing data before analyzing it and the effect of outliers
+on statistical properties. He described the article as being intended to counter 
+the impression among statisticians that "numerical calculations are exact, but graphs are rough.[1]
+
+
+```{r libraries,message=FALSE,warning=FALSE}
+library("plotly")
+library("tidyr")
+library("dplyr")
+```
+
+## Graphs
+
+```{r anscombe, echo=FALSE}
+anscombeData1 <- data.frame(x=c(10.0,8.0,13.0,9.0,11.0,14.0,6.0,4.0,12.0,7.0,5.0),
+                           y=c(8.04,6.95,7.58,8.81,8.33,9.96,7.24,4.26,10.84,4.82,5.68))
+anscombeData2 <- data.frame(x=c(10.0,8.0,13.0,9.0,11.0,14.0,6.0,4.0,12.0,7.0,5.0),
+                            y=c(9.14,8.14,8.74,8.77,9.26,8.10,6.13,3.10,9.13,7.26,4.74))
+anscombeData3 <- data.frame(x=c(10.0,8.0,13.0,9.0,11.0,14.0,6.0,4.0,12.0,7.0,5.0),
+                            y=c(7.46,6.77,12.74,7.11,7.81,8.84,6.08,5.39,8.15,6.42,5.73))
+anscombeData4 <- data.frame(x=c(8.0,8.0,8.0,8.0,8.0,8.0,8.0,19.0,8.0,8.0,8.0),
+                            y=c(6.58,5.76,7.71,8.84,8.47,7.04,5.25,12.50,5.56,7.91,6.89))
+
+fit1 <- lm(y ~ x, data = anscombeData1)
+fit2 <- lm(y ~ x, data = anscombeData2)
+fit3 <- lm(y ~ x, data = anscombeData3)
+fit4 <- lm(y ~ x, data = anscombeData4)
+
+p1 <- plot_ly(anscombeData1, x = ~x, y = ~y,type="scatter", mode = 'markers', name = ~"dist1") %>%
+  add_lines(x = , y = fitted(fit1),name = ~"reg1")
+p2 <- plot_ly(anscombeData2, x = ~x, y = ~y,type="scatter",mode = 'markers') %>%
+  add_lines(x = , y = fitted(fit2),name = ~"reg2")
+p3 <- plot_ly(anscombeData3, x = ~x, y = ~y,type="scatter",mode = 'markers') %>%
+  add_lines(x = , y = fitted(fit3),name = ~"reg3")
+p4 <- plot_ly(anscombeData4, x = ~x, y = ~y,type="scatter",mode = 'markers') %>%
+  add_lines(x = , y = fitted(fit4),name = ~"reg4")
+
+p <- subplot(p1, p2,p3,p4,nrows=2)
+p
+```
+
+
+## References
+
+1- [Anscombe's quartet - https://en.wikipedia.org/wiki/Anscombe%27s_quartet][1] <br>
+2- [Frank Anscombe - https://en.wikipedia.org/wiki/Frank_Anscombe][2]
+
+
+[1]: https://en.wikipedia.org/wiki/Anscombe%27s_quartet
+[2]: https://en.wikipedia.org/wiki/Frank_Anscombe
